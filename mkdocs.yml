@@ -1,0 +1,13 @@
+site_name: SHAPEwarp
+theme:
+    name: readthedocs
+    highlightjs: true
+    hljs_languages:
+        - yaml
+pages:
+    - 'Overview': 'index.md'
+    - 'SHAPEwarp': 'SHAPEwarp.md'
+    - 'swBuildDb': 'swBuildDb.md'
+    - 'swKmerLookup': 'swKmerLookup.md'
+markdown_extensions:
+    - markdown.extensions.admonition

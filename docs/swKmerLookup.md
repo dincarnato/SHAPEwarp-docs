@@ -1,0 +1,30 @@
+The ``swKmerLookup`` module is responsible for identifying potential kmer matches in the database and for grouping them into high scoring groups (HSGs). The module takes advantage of the [__MASS algorithm__](https://www.cs.unm.edu/~mueen/FastestSimilaritySearch.html) for fast similarity search<br/><br/>
+
+# Usage
+To list the required parameters, simply type:
+
+```bash
+$ swKmerLookup --help
+```
+
+Parameter         | Type | Description
+----------------: | :--: |:------------
+__-o__ *or* __--output__ | string | Output file (in Perl's [Storable](https://perldoc.perl.org/Storable) format) to store the identified HSGs (Default: __hsg.sto__)
+__--debug__ | | Identified HSGs are printed to screen
+__--db__ | string | Path to a database folder generated with ``swBuildDb``
+__--query__ | string | A comma-separated list of reactivities of the query
+__--seq__ | string | Nucleotide sequence of the query
+__--threads__ | int | Number of processors to use (Default: __1__)
+__--maxReactivity__ | float | Maximum value to which reactivities will be capped (Default: __1__)
+__--kmerLen__ | int | Length (in nt) of the kmers (Default: __15__)
+__--minKmers__ | int | Minimum number of kmers required to form a High Scoring Group (HSG; Default: __2__)
+__--maxKmerDist__ | int | Maximum distance between two kmers to be merged in a HSG (Default: __30__)
+__--matchKmerSeq__ | | The sequence of a query kmer and the corresponding database match must differ no more than ``--maxKmerSeqDist``
+__--kmerMaxSeqDist__ | float | Maximum allowed sequence distance to retain a kmer match (requires ``--matchKmerSeq``; Default: __0__)<br/>__Note:__ when >= 1, this is interpreted as the absolute number of bases that are allowed to differ between the kmer and the matching region. When < 1, this is interpreted as a fraction of the kmer's length
+__--matchKmerGCcontent__ | | The sequence of a query kmer and the corresponding database match must have GC% contents differing no more than ``--kmerMaxGCdiff``
+__--kmerMaxGCdiff__ | float | Maximum allowed GC% difference to retain a kmer match (requires ``--matchKmerGCcontent``)<br/>__Note:__ the default value is automatically determined based on the chosen kmer length
+__--kmerOffset__ | int | Sliding offset for extracting candidate kmers from the query (Default: __1__)
+__--kmerMinComplexity__ | float | Minimum complexity (measured as Gini coefficient) of candidate kmers (Default: __0.3__)
+__--kmerMaxMatchEveryNt__ | int | A kmer is allowed to match a database entry on average every this many nt (Default: __200__)
+
+    
