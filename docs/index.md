@@ -15,11 +15,6 @@ Edoardo Morandi (emorandi[at]rnaframework.com)<br/>
 Danny Incarnato (dincarnato[at]rnaframework.com)<br/>
 
 
-## Reference
-
-Morandi *et al*., submitted. SHAPE-guided RNA structure homology search and motif discovery.
-
-
 ## License
 
 This program is free software, and can be redistribute and/or modified under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or any later version.
