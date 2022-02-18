@@ -87,4 +87,4 @@ Query     DB    Qstart  Qend   Dstart  Dend   Qseed    Dseed      Score    P-val
 16S_800   23S   47      164    1608    1725   64-81    1625-1642  80.20    4.64e-04   0.05      ?
 16S_800   16S   46      161    30      145    56-71    40-55      76.82    6.86e-04   0.08      ?
 ```
-Significant matches at the specified E-value threshold (__0.01__ by default) are marked with a __!__, while non-significant matches are marked with a __?__. The "*alignments/*" and "*images/*" folders respectively contain the FASTA-formatted alignment of the corresponding RNA sequences and the SVG plots of the aligned SHAPE reactivity profiles.
+Significant matches at the specified E-value threshold (__0.01__ by default) are marked with a __!__, while non-significant matches are marked with a __?__. The "*alignments/*" and "*images/*" folders respectively contain the FASTA-formatted alignments of the matched RNA sequences and the SVG plots of the aligned SHAPE reactivity profiles.
