@@ -68,8 +68,6 @@ reportEvalue=1
 The file "*results.out*" stores the results of the database search:
 
 ```text
-Query    DB	Qstart  Qend  Dstart	Dend	Qseed  Dseed  Score  P-value  E-value
-[danny@rna-compute eco_vs_bsu]$ cat results.out
 Query     DB    Qstart  Qend   Dstart  Dend   Qseed    Dseed      Score    P-value    E-value
 16S_600   16S   0       199    608     807    60-114   668-722    190.53   4.47e-11   6.39e-09  !
 16S_500   16S   0       196    508     704    160-186  668-694    203.47   2.30e-10   3.06e-08  !
