@@ -9,5 +9,6 @@ pages:
     - 'SHAPEwarp': 'SHAPEwarp.md'
     - 'swBuildDb': 'swBuildDb.md'
     - 'swKmerLookup': 'swKmerLookup.md'
+    - 'Application case': 'case.md'
 markdown_extensions:
     - markdown.extensions.admonition
