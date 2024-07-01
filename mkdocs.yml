@@ -4,6 +4,10 @@ theme:
     highlightjs: true
     hljs_languages:
         - yaml
+build:
+    os: ubuntu-22.04
+    tools:
+        python: "3.11"
 pages:
     - 'Overview': 'index.md'
     - 'SHAPEwarp': 'SHAPEwarp.md'

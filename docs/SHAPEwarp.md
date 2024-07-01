@@ -22,98 +22,108 @@ Given a user-provided query, the following analysis steps are performed:<br/>
 To list the required parameters, simply type:
 
 ```bash
-$ SHAPEwarp --help
+$ SHAPEwarp -h
 ```
 
 Parameter         | Type | Description
 ----------------: | :--: |:------------
-__-db__ *or* __--database__ | string | Path to a database folder generated with ``swBuildDb``
+__-db__ *or* __--database__ | string | Path to a database file, or to a (directory of) RNA Framework XML file(s)
+__--shuffled-db__ | string | Path to a shuffled database file<br/>__Note:__ if not provided, shuffling will be performed on the fly
+__--dump-db__ | string | Dumps the imported XML files to the specified database file
+__--dump-shuffled-db__ | string | Dumps the shuffled database to the specified file
+__--db-shufflings__ | int | Number of shufflings to perform for each sequence in the database (Default: __100__)
+__--db-block-size__ | int | Size (in nt) of the blocks for shuffling the sequences in the database (Default: __10__)
+__--db-in-block-shuffle__ | | Besides shuffling blocks, residues within each block will be shuffled as well
 __-q__ *or* __--query__ | string | Path to the query file<br/>__Note:__ each entry should contain (one per row) the sequence id, the nucleotide sequence and a comma-separated list of SHAPE reactivities (see [SHAPEwarp query files](https://shapewarp-docs.readthedocs.io/en/latest/SHAPEwarp/#shapewarp-query-files) section below)
 __-o__ *or* __--output__ | string | Output directory (Default: __sw_out/__)
-__-ow__ *or* __--overwrite__ | | Overwrites the output directory (if the specified path already exists)
+__--overwrite__ | | Overwrites the output directory (if the specified path already exists)
 __--threads__ | int | Number of processors to use (Default: __1__)
-__--maxReactivity__ | float | Maximum value to which reactivities will be capped (Default: __1__)
-__--maxAlignOverlap__ | float | If two significant alignments overlap by more than this value, the least significant one (the one with the lowest alignment score) will be discarded (Default: __0.5__)
-__--nullHSGs__ | int |  Number of HSGs in the shuffled database to be extended to build the null model (Default: __10000__)
-__--incE__ *or* __--inclusionEvalue__ | float | E-value threshold to consider an alignment significant (Default: __0.01__)
-__--repE__ *or* __--reportEvalue__ | float | E-value threshold to report a match (Default: __0.1__
-__--makePlot__ | | Generates plots of aligned SHAPE reactivity (or probability) profiles<br/>__Note:__ plots are generated only for matches below the inclusion E-value cutoff 
-__--reportAln__ | string | Reports sequence alignments in the specified format ([f]asta or [s]tockholm)<br/>__Note:__ alignments are reported only for matches below the inclusion E-value cutoff
-__--foldQuery__ | | Query SHAPE profile is first used to calculate a base-pairing probability profile, that is then used to search into the db<br/>__Note:__ the db must have been generated with the ``--foldDb`` option
- | | __Folding options__ (require ``--foldQuery`` or ``--evalAlignFold``)
-__--slope__ | float | Slope for SHAPE reactivities conversion into pseudo-free energy contributions (Default: __1.8__)
-__--intercept__ | float | Intercept for SHAPE reactivities conversion into pseudo-free energy contributions (Default: __-0.6__)
-__--maxBPspan__ | int | Maximum allowed base-pairing distance (Default: __600__)
-__--noLonelyPairs__ | | Disallows lonely pairs (helices of 1 bp)
-__--noClosingGU__ | | Dissalows G:U wobbles at the end of helices
-__--temperature__ | float | Folding temperature (Default: __37.0__)
- | | __Query folding-specific options__ (require ``--foldQuery``)
-__--winSize__ | int | Size (in nt) of the sliding window for partition function calculation (Default: __800__)
-__--offset__ | int | Offset (in nt) for partition function window sliding (Default: __200__)
-__--winTrim__ | int | Number of bases to trim from both ends of partition function windows to avoid terminal biases (Default: __50__)
-__--ignoreReact__ | | SHAPE reactivity is ignored when folding the query
+__--max-reactivity__ | float | Maximum value to which reactivities will be capped (Default: __1__)
+__--max-align-overlap__ | float | If two significant alignments overlap by more than this value, the least significant one (the one with the lowest alignment score) will be discarded (Default: __0.5__)
+__--null-hsgs__ | int |  Number of HSGs in the shuffled database to be extended to build the null model (Default: __10000__)
+__--inc-e__ *or* __--inclusion-evalue__ | float | E-value threshold to consider an alignment significant (Default: __0.01__)
+__--rep-e__ *or* __--report-evalue__ | float | E-value threshold to report a match (Default: __0.1__
+__--report-alignment__ | string | Reports sequence alignments in the specified format (fasta or stockholm)<br/>__Note:__ alignments are reported only for matches below the inclusion E-value cutoff
+__--report-reactivity__ | | Reports the aligned reactivities for significant matches in the `reactivities/` subfolder of the output directory, in JSON format
  | | __Kmer lookup options__
-__--minKmers__ | int | Minimum number of kmers required to form a High Scoring Group (HSG; Default: __2__)
-__--maxKmerDist__ | int | Maximum distance between two kmers to be merged in a HSG (Default: __30__)
-__--kmerLen__ | int | Length (in nt) of the kmers (Default: __15__)
-__--kmerOffset__ | int | Sliding offset for extracting candidate kmers from the query (Default: __1__)
-__--matchKmerGCcontent__ | | The sequence of a query kmer and the corresponding database match must have GC% contents differing no more than ``--kmerMaxGCdiff``
-__--kmerMaxGCdiff__ | float | Maximum allowed GC% difference to retain a kmer match (requires ``--matchKmerGCcontent``)<br/>__Note:__ the default value is automatically determined based on the chosen kmer length
-__--matchKmerSeq__ | | The sequence of a query kmer and the corresponding database match must differ no more than ``--kmerMaxSeqDist``
-__--kmerMaxSeqDist__ | float | Maximum allowed sequence distance to retain a kmer match (requires ``--matchKmerSeq``; Default: __0__)<br/>__Note:__ when >= 1, this is interpreted as the absolute number of bases that are allowed to differ between the kmer and the matching region. When < 1, this is interpreted as a fraction of the kmer's length
-__--kmerMinComplexity__ | float | Minimum complexity (measured as Gini coefficient) of candidate kmers (Default: __0.3__)
-__--kmerMaxMatchEveryNt__ | int | A kmer is allowed to match a database entry on average every this many nt (Default: __200__)
+__--min-kmers__ | int | Minimum number of kmers required to form a High Scoring Group (HSG; Default: __2__)
+__--max-kmer-dist__ | int | Maximum distance between two kmers to be merged in a HSG (Default: __30__)
+__--kmer-len__ | int | Length (in nt) of the kmers (Default: __15__)
+__--kmer-offset__ | int | Sliding offset for extracting candidate kmers from the query (Default: __1__)
+__--match-kmer-gc-content__ | | The sequence of a query kmer and the corresponding database match must have GC% contents differing no more than ``--kmer-max-gc-diff``
+__--kmer-max-gc-diff__ | float | Maximum allowed GC% difference to retain a kmer match (requires ``--match-kmer-gc-content``)<br/>__Note:__ the default value is automatically determined based on the chosen kmer length
+__--match-kmer-seq__ | | The sequence of a query kmer and the corresponding database match must differ no more than ``--kmer-max-seq-dist``
+__--kmer-max-seq-dist__ | float | Maximum allowed sequence distance to retain a kmer match (requires ``--match-kmer-seq``; Default: __0__)<br/>__Note:__ when >= 1, this is interpreted as the absolute number of bases that are allowed to differ between the kmer and the matching region. When < 1, this is interpreted as a fraction of the kmer's length
+__--kmer-min-complexity__ | float | Minimum complexity (measured as Gini coefficient) of candidate kmers (Default: __0.3__)
+__--kmer-max-match-every-nt__ | int | A kmer is allowed to match a database entry on average every this many nt (Default: __200__)<br/>__Note:__ this value is automatically adjusted for shorter database entries
  | | __Alignment options__
-__--alignMatchScore__ | float,float | Minimum and maximum score reactivity differences below 0.5 will be mapped to (Default: __0,2__)
-__--alignMismatchScore__ | float,float | Minimum and maximum score reactivity differences above 0.5 will be mapped to (Default: __-6,-0.5__)
-__--alignGapOpenPenal__ | float | Gap open penalty (Default: __-14__)
-__--alignGapExtPenal__ | float | Gap extension penalty (Default: __-5__)
-__--alignMaxDropOffRate__ | float | An alignment is allowed to drop by maximum this fraction of the best score encountered so far, before extension is interrupted (Default: __0.8__)
-__--alignMaxDropOffBases__ | int | An alignment is allowed to drop below the best score encountered so far * ``--alignMaxDropOffRate`` by this number of bases, before extension is interrupted (Default: __8__)
-__--alignLenTolerance__ | float | The maximum allowed tollerated length difference between the query and db sequences to look for the ideal alignment along the diagonal (measured as a fraction of the length of the shortest sequence between the db and the query) (Default: __0.1__)
-__--alignScoreSeq__ | | Sequence matches are rewarded during the alignment
-__--alignSeqMatchScore__ | float | Score reward for matching bases (Default: __0.5__)
-__--alignSeqMismatchScore__ | float | Score reward for matching bases (Default: __-2__)
- | | __Alignment folding evaluation options__ (*see also* "__Folding options__")
-__--evalAlignFold__ | | Alignments passing the ``--inclusionEvalue`` threshold, are further evaluated for the presence of a conserved RNA structure by using ``RNAalifold``
+__--align-match-score__ | float,float | Minimum and maximum score reactivity differences below 0.5 will be mapped to (Default: __0,2__)
+__--align-mismatch-score__ | float,float | Minimum and maximum score reactivity differences above 0.5 will be mapped to (Default: __-6,-0.5__)
+__--align-gap-open-penalty__ | float | Gap open penalty (Default: __-14__)
+__--align-gap-ext-penalty__ | float | Gap extension penalty (Default: __-5__)
+__--align-max-drop-off-rate__ | float | An alignment is allowed to drop by maximum this fraction of the best score encountered so far, before extension is interrupted (Default: __0.8__)
+__--align-max-drop-off-bases__ | int | An alignment is allowed to drop below the best score encountered so far * ``--align-max-drop-off-rate`` by this number of bases, before extension is interrupted (Default: __8__)
+__--align-len-tolerance__ | float | The maximum allowed tollerated length difference between the query and db sequences to look for the ideal alignment along the diagonal (measured as a fraction of the length of the shortest sequence between the db and the query) (Default: __0.1__)
+__--align-score-seq__ | | Sequence matches are rewarded during the alignment
+__--align-seq-match-score__ | float | Score reward for matching bases (Default: __0.5__)
+__--align-seq-mismatch-score__ | float | Score reward for matching bases (Default: __-2__)
+ | | __Alignment folding evaluation options__ 
+__--eval-align-fold__ | | Alignments passing the ``--inclusion-evalue`` threshold, are further evaluated for the presence of a conserved RNA structure by using ``RNAalifold``
 __--shufflings__ | | Number of shufflings to perform for each alignment (Default: __100__)
-__--blockSize__ | int | Size (in nt) of the blocks for shuffling the alignment (Default: __3__)
-__--inBlockShuffle__ | | Besides shuffling blocks, residues within each block will be shuffled as well
-__--minBpSupport__ | float | Minimum fraction of base-pairs of the RNAalifold-inferred structure that should be supported by both query and db sequence to retain a match (Default: __0.75__)
-__--ribosumScoring__ | | Use RIBOSUM scoring matrix
-__--alignFoldPvalue__ | float | P-value threshold to consider signficant an RNA structure predicted by RNAalifold (Default: __0.05__)
-__--RNAalifold__ | string | Path to RNAalifold executable (Default: assumes RNAalifold is in PATH)
+__--block-size__ | int | Size (in nt) of the blocks for shuffling the alignment (Default: __3__)
+__--in-block-shuffle__ | | Besides shuffling blocks, residues within each block will be shuffled as well
+__--min-bp-support__ | float | Minimum fraction of base-pairs of the RNAalifold-inferred structure that should be supported by both query and db sequence to retain a match (Default: __0.75__)
+__--ribosum-scoring__ | | Use RIBOSUM scoring matrix
+__--slope__ | float | Slope for SHAPE reactivities conversion into pseudo-free energy contributions (Default: __1.8__)
+__--intercept__ | float | Intercept for SHAPE reactivities conversion into pseudo-free energy contributions (Default: __1.8__)
+__--max-bp-span__ | int | Maximum allowed base-pairing distance (Default: __600__)
+__--no-lonely-pairs__ | | Disallows lonely pairs (helices of 1 bp)
+__--no-closing-gu__ | | Disallows G:U wobbles at the end of helices
+__--temperature__ | float | Folding temperature in Celsius (Default: __37.0__)
 
 <br/>
+## Building the database
+Since version 2.0.0, in addition to standard binary database files, SHAPEWarp can directly import (directories of) SHAPE XML reactivity files (generated using [RNA Framework](https://rnaframework-docs.readthedocs.io/en/latest/); check the [documentation](https://rnaframework-docs.readthedocs.io/en/latest/rf-norm/#output-xml-files) for additional details). Similarly, if no shuffled database is provided, database shuffling will be performed on the fly.
+
+However, when working with large datasets, it might be convenient to build and store a binary database file. This can be accomplished as it follows:
+
+```bash
+$ SHAPEwarp --database /path/to/directory/of/XML/files --dump-db /path/to/database.db
+```
+
+<br/>
+Similarly, to reduce runtimes, or to ensure reproducible search results, it might be convenient to dump the shuffled database to file:
+
+```bash
+$ SHAPEwarp --database /path/to/directory/of/XML/files --dump-db /path/to/binary/database.db --dump-shuffled-db /path/to/shuffled/database.db
+```
+
+</br>
 ## Understanding the algorithm
 While it is advisable for most users to run SHAPEwarp with its default parameters, as these are the results of a careful and thorough calibration, it might be useful to adjust the analysis on a case-by-case basis.<br/>
 <br/>
-First of all, as SHAPE reactivities can have a variable range, depending on the [normalization scheme](https://rnaframework-docs.readthedocs.io/en/latest/rf-norm/#normalization-of-raw-reactivities) that has been adopted, both query and database reactivities are capped to a maximum value of ``maxReactivity``. During the __kmer lookup__ phase, the algorithm enumerates all the possible kmers of size ``kmerLen`` in the user-provided query, filtering out those:
+First of all, as SHAPE reactivities can have a variable range, depending on the [normalization scheme](https://rnaframework-docs.readthedocs.io/en/latest/rf-norm/#normalization-of-raw-reactivities) that has been adopted, both query and database reactivities are capped to a maximum value of ``max-reactivity``. During the __kmer lookup__ phase, the algorithm enumerates all the possible kmers of size ``kmer-len`` in the user-provided query, filtering out those:
 
 1. encompassing *NaN* values
-2. having Gini coefficient &lt; ``kmerMinComplextiy``, corresponding to regions of low structural complexity (expected to match most transcripts)
+2. having Gini coefficient &lt; ``kmer-min-complextiy``, corresponding to regions of low structural complexity (expected to match most transcripts)
 
 Kmers are matched against the database using the [MASS](https://www.cs.unm.edu/~mueen/FastestSimilaritySearch.html) algorithm. Given a kmer and a database reactivity profile, MASS returns an array of distances of that kmer to each position of the database profile. Matches having a distance &lt; &mu; - 3 &times; &sigma;, where &mu; and &sigma; are respectively the mean and the standard deviation of the distances, are retained. Kmer-match pairs are then filtered out on the basis of the following criteria:
 
-1. when ``matchGCcontent`` is enabled and the difference between the GC% content of the kmer and that of its database match is &gt; ``kmerMaxGCdiff``
-2. when ``matchKmerSeq`` is enabled and the sequence of the kmer and that of its database match differ by more than ``maxKmerSeqDist``
-3. when the ratio between the length of the database transcript and the number of matches for a given kmer in that transcript is &lt; ``kmerMaxMatchEveryNt``
+1. when ``match-gc-content`` is enabled and the difference between the GC% content of the kmer and that of its database match is &gt; ``kmer-max-gc-diff``
+2. when ``match-kmer-seq`` is enabled and the sequence of the kmer and that of its database match differ by more than ``max-kmer-seq-dist``
+3. when the ratio between the length of the database transcript and the number of matches for a given kmer in that transcript is &lt; ``kmer-max-match-every-nt``
 
-The retained kmers are then grouped into high-scoring groups (HSGs). HSGs are made of kmers residing on the same diagonal (so, corresponding to regions of the query and database that can be theoretically aligned without opening gaps). Each HSG is made of &ge; ``minKmers`` kmers, residing within a maximum distance of ``maxKmerDist`` from each other.<br/>
+The retained kmers are then grouped into high-scoring groups (HSGs). HSGs are made of kmers residing on the same diagonal (so, corresponding to regions of the query and database that can be theoretically aligned without opening gaps). Each HSG is made of &ge; ``min-kmers`` kmers, residing within a maximum distance of ``max-kmer-dist`` from each other.<br/>
 <br/>
-Each HSG constitutes the *seed* from which an alignment extension will be attempted, both upstream and downstream. The __seed extension__ uses a dynamic programming algorithm that incorporates features of both dynamic time warping (DTW) and of Gotoh's Smith-Waterman implementation with affine gap penalties. In brief, if the reactivity difference between two bases is &lt; 0.5, the corresponding alignment score is calculated by linearly mapping the reactivity difference to the ``alignMatchScore`` range. Similarly, if the reactivity difference is &ge; 0.5, the corresponding alignment score is calculated by linearly mapping the reactivity difference to the ``alignMismatchScore`` range. Affine gap penalties are controlled via the ``alignGapOpenPenal``, the gap open penalty, and ``alignGapOpenExt``, the gap extension penalty. During the matrix-filling stage of the algorithm, the alignment score is allowed to drop by not more than ``alignMaxDropOffRate`` &times; the best alignment score encountered so far, for no more than ``alignMaxDropOffBases``. While the algorithm is sequence-agnostic by default, sequence can be optionally taken into account by enabling the ``alignScoreSeq`` option. When enabled, sequence matches are rewarded by ``alignSeqMatchScore`` and mismatches are penalized by ``alignSeqMismatchScore``. To further speed-up the alignment phase, the alignment matrix is only filled in a band of size *b* around the diagonal, where *b* is defined as min(10, ``alignLenTolerance`` &times; min(*q*, *d*)), where *q* and *d* are respectively the length of the query and of the database entry. Therefore, a minimum band size of 10 nt is always granted. The final alignment score *S* is calculated as the sum of the scores of the HSG (the *seed*), plus the two upstream and downstream extensions.<br/>
+Each HSG constitutes the *seed* from which an alignment extension will be attempted, both upstream and downstream. The __seed extension__ uses a dynamic programming algorithm that incorporates features of both dynamic time warping (DTW) and of Gotoh's Smith-Waterman implementation with affine gap penalties. In brief, if the reactivity difference between two bases is &lt; 0.5, the corresponding alignment score is calculated by linearly mapping the reactivity difference to the ``align-match-score`` range. Similarly, if the reactivity difference is &ge; 0.5, the corresponding alignment score is calculated by linearly mapping the reactivity difference to the ``align-mismatch-score`` range. Affine gap penalties are controlled via the ``align-gap-open-penalty``, the gap open penalty, and ``align-gap-ext-penalty``, the gap extension penalty. During the matrix-filling stage of the algorithm, the alignment score is allowed to drop by not more than ``align-max-drop-off-rate`` &times; the best alignment score encountered so far, for no more than ``align-max-drop-off-bases``. While the algorithm is sequence-agnostic by default, sequence can be optionally taken into account by enabling the ``align-score-seq`` option. When enabled, sequence matches are rewarded by ``align-seq-match-score`` and mismatches are penalized by ``align-seq-mismatch-score``. To further speed-up the alignment phase, the alignment matrix is only filled in a band of size *b* around the diagonal, where *b* is defined as min(10, ``align-len-tolerance`` &times; min(*q*, *d*)), where *q* and *d* are respectively the length of the query and of the database entry. Therefore, a minimum band size of 10 nt is always granted. The final alignment score *S* is calculated as the sum of the scores of the HSG (the *seed*), plus the two upstream and downstream extensions.<br/>
 <br/>
-After having extended any possible HSG in the database, the same procedure is repeated by searching the query in a database of shuffled reactivity profiles. A maximum of ``nullHSGs`` HSGs identified in the shuffled database are extended, and the resulting alignment scores are used to build the null model, hence allowing to calculate a *p-value* for each alignment from the real database. The *p-value* is the probability of identifying by chance a match having a score &ge; *S*. The __E-value__ corresponds to the number of expected database matches having a score &ge; *S* and it is thus calculated as *p-value* &times; the number of extended HSGs. It might happen, especially with long queries, that multiple HSGs will be identified for the same query-database entry pair, hence resulting in multiple overlapping alignments. To prevent duplicate matches from being reported, if multiple alignments overlap by more than ``maxAlignOverlap``, only the one with the lowest E-value is reported.<br/>
+After having extended any possible HSG in the database, the same procedure is repeated by searching the query in a database of shuffled reactivity profiles. A maximum of ``null-hsgs`` HSGs identified in the shuffled database are extended, and the resulting alignment scores are used to build the null model, hence allowing to calculate a *p-value* for each alignment from the real database. The *p-value* is the probability of identifying by chance a match having a score &ge; *S*. The __E-value__ corresponds to the number of expected database matches having a score &ge; *S* and it is thus calculated as *p-value* &times; the number of extended HSGs. It might happen, especially with long queries, that multiple HSGs will be identified for the same query-database entry pair, hence resulting in multiple overlapping alignments. To prevent duplicate matches from being reported, if multiple alignments overlap by more than ``max-align-overlap``, only the one with the lowest E-value is reported.<br/>
 <br/>
-Optionally, if the ``evalAlignFold`` option is enabled, alignments passing the ``incE`` E-value cutoff can be evaluated for the presence of a consensus secondary structure, via __RNAalifold__. RNAalifold uses both the sequence alignment and the corresponding SHAPE reactivity information. SHAPE reactivities are converted into pseudo free energy contributions by using the approach from [Deigan *et al.*, 2009](https://pubmed.ncbi.nlm.nih.gov/19109441/):<br/>
+Optionally, if the ``eval-align-fold`` option is enabled, alignments passing the ``inc-e`` E-value cutoff can be evaluated for the presence of a consensus secondary structure, via __RNAalifold__. RNAalifold uses both the sequence alignment and the corresponding SHAPE reactivity information. SHAPE reactivities are converted into pseudo free energy contributions by using the approach from [Deigan *et al.*, 2009](https://pubmed.ncbi.nlm.nih.gov/19109441/):<br/>
 <br/>
 &#916;G<sub>SHAPE</sub>(*i*) = ``slope`` &middot; ln[Reactivity(*i*) + 1] + ``intercept``
 <br/><br/>
-If less than ``minBpSupport`` base-pairs from the predicted consensus structure are supported for either of the two aligned RNAs, the match is discarded. Furthermore, the probability of predicting a structure with a free energy &le; to that of the consensus structure inferred from the alignment is evaluated by randomly shuffling ``shufflings`` times the columns of the original alignment in ``blockSize``-long blocks, followed by __RNAalifold__ analysis. A z-score is calculated and the corresponding *p-value* determined. If the *p-value* is &lt; ``alignFoldPvalue``, the alignment and the inferred structure are reported.<br/>
-<br/>
-### Using SHAPEwarp with non-SHAPE chemical probing data
-To further enable the search of reactivity profiles derived by probing with nucleobase-specific  reagents (i.e. DMS, CMCT, etc.), SHAPEwarp implements the possibility of converting reactivities into base-pairing probabilities (or, more precisely, unpaired probabilities). This option is activated by enabling the ``foldQuery`` parameter. The partition function is calcolated for the query in sliding ``winSize``-long windows, slid with an offset of ``offset`` nucleotides. To avoid end-biases due to folding being computed in windows, ``winTrim`` bases are trimmed from both ends of the partition function window. The conversion of reactivities into pseudo free energy contributions follows the same approach described above for __RNAalifold__ (optimal slope and intercept can be set by using the same ``slope`` and ``intercept`` parameters). From the base-pairing probabilities then the probability of each base of being unpaired is determined and used to search in the target database. The database must have been generated by enabling the ``foldDb`` option of [``swBuildDb``](https://shapewarp-docs.readthedocs.io/en/latest/swBuildDb/).
-<br/><br/>
+If less than ``min-bp-support`` base-pairs from the predicted consensus structure are supported for either of the two aligned RNAs, the match is discarded. Furthermore, the probability of predicting a structure with a free energy &le; to that of the consensus structure inferred from the alignment is evaluated by randomly shuffling ``shufflings`` times the columns of the original alignment in ``block-size``-long blocks, followed by __RNAalifold__ analysis. A z-score is calculated and the corresponding *p-value* determined. If the *p-value* is &lt; 0.05, the alignment and the inferred structure are reported.<br/><br/>
 ## SHAPEwarp query files
 SHAPEwarp query files are plain-text files, containing the unique identifier, nucleotide sequence and reactivity profile, one per line, for each query to be searched against the database. The typical SHAPEwarp query file has the following structure:
 
@@ -131,30 +141,30 @@ AGTGGCGGACGGGTGAGTAATGTCTGGGAAACTGCCTGATGGAGGGGGATAACTACTGGAAACGGTAGCTAATACCGCAT
 The typical SHAPEwarp's output has the following structure:
 
 ```text
-Query     DB   Qstart  Qend   Dstart  Dend    Qseed   Dseed      Score   P-value   E-value
-16S_600   16S  0       199    608     807     60-114  668-722    190.53  4.47e-11  6.39e-09  !
-16S_500   16S  0       196    508     704     160-186 668-694    203.47  2.30e-10  3.06e-08  !
-16S_200   16S  9       199    216     406     120-183 327-390    187.13  3.13e-10  3.41e-08  !
-16S_700   16S  0       161    708     869     65-129  773-837    159.63  3.19e-09  5.07e-07  !
-16S_1300  16S  0       180    1308    1488    10-112  1318-1420  199.02  3.94e-09  6.19e-07  !
-16S_900   16S  7       170    916     1079    16-100  925-1009   173.76  2.23e-08  1.16e-06  !
-16S_400   16S  19      199    427     607     97-144  505-552    159.77  1.09e-07  1.42e-05  !
-16S_300   16S  4       194    311     501     20-83   327-390    146.14  2.70e-07  3.40e-05  !
-16S_800   16S  0       199    808     1008    73-199  882-1008   137.66  5.85e-07  6.67e-05  !
-16S_1100  16S  49      199    1157    1307    68-96   1176-1204  132.35  9.51e-07  9.70e-05  !
-16S_0     16S  10      161    17      168     85-102  92-109     87.73   6.57e-05  4.66e-03  !
-16S_1200  16S  0       199    1208    1407    110-199 1318-1407  131.31  3.52e-05  5.39e-03  !
-16S_1100  16S  40      194    55      209     170-185 185-200    80.03   4.52e-04  0.05      ?
-16S_400   23S  25      155    1252    1382    74-92   1301-1319  87.09   3.55e-04  0.05      ?
-16S_800   23S  47      164    1608    1725    64-81   1625-1642  80.20   4.64e-04  0.05      ?
-16S_800   16S  46      161    30      145     56-71   40-55      76.82   6.86e-04  0.08      ?
+Query     DB entry	Qstart  Qend   Dstart  Dend    Qseed   Dseed      Score   P-value   E-value
+16S_600   16S       0       199    608     807     60-114  668-722    190.53  4.47e-11  6.39e-09  !
+16S_500   16S       0       196    508     704     160-186 668-694    203.47  2.30e-10  3.06e-08  !
+16S_200   16S       9       199    216     406     120-183 327-390    187.13  3.13e-10  3.41e-08  !
+16S_700   16S       0       161    708     869     65-129  773-837    159.63  3.19e-09  5.07e-07  !
+16S_1300  16S       0       180    1308    1488    10-112  1318-1420  199.02  3.94e-09  6.19e-07  !
+16S_900   16S       7       170    916     1079    16-100  925-1009   173.76  2.23e-08  1.16e-06  !
+16S_400   16S       19      199    427     607     97-144  505-552    159.77  1.09e-07  1.42e-05  !
+16S_300   16S       4       194    311     501     20-83   327-390    146.14  2.70e-07  3.40e-05  !
+16S_800   16S       0       199    808     1008    73-199  882-1008   137.66  5.85e-07  6.67e-05  !
+16S_1100  16S       49      199    1157    1307    68-96   1176-1204  132.35  9.51e-07  9.70e-05  !
+16S_0     16S       10      161    17      168     85-102  92-109     87.73   6.57e-05  4.66e-03  !
+16S_1200  16S       0       199    1208    1407    110-199 1318-1407  131.31  3.52e-05  5.39e-03  !
+16S_1100  16S       40      194    55      209     170-185 185-200    80.03   4.52e-04  0.05      ?
+16S_400   23S       25      155    1252    1382    74-92   1301-1319  87.09   3.55e-04  0.05      ?
+16S_800   23S       47      164    1608    1725    64-81   1625-1642  80.20   4.64e-04  0.05      ?
+16S_800   16S       46      161    30      145     56-71   40-55      76.82   6.86e-04  0.08      ?
 ```
 where:<br/>
 
 Field  | Description
 -----: | :----------
 __Query__ | Query ID
-__DB__ | Database entry's ID
+__DB entry__ | Database entry's ID
 __Qstart__ | First aligned base of the query
 __Qend__ | Last aligned base of the query
 __Dstart__ | First aligned base of the database entry
@@ -169,6 +179,6 @@ If the ``evalAlignFold`` option has been enabled, three additional fields will b
 
 Field  | Description
 -----: | :----------
-__Alifold p-value__ | The probability of obtaining by chance a consensus structure with the same (or lower) free energy
-__Dbpsupport__ | Fraction of base-pairs in the consensus structure, that are supported by the database entry's sequence
-__Qbpsupport__ | Fraction of base-pairs in the consensus structure, that are supported by the query sequence
+__TargetBpSupport__ | Fraction of base-pairs in the consensus structure, that are supported by the database entry's sequence
+__QueryBpSupport__ | Fraction of base-pairs in the consensus structure, that are supported by the query sequence
+__MfePvalue__ | The probability of obtaining by chance a consensus structure with the same (or lower) free energy
