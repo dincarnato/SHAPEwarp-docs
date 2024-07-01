@@ -175,7 +175,7 @@ __Score__ | Alignment score
 __P-value__ | The probability of finding by chance an alignment with the same (or greater) score
 __E-value__ | The number of expected matches by chance, with the same (or greater) score, in a database of the same size
 
-If the ``evalAlignFold`` option has been enabled, three additional fields will be reported:<br/>
+If the ``--eval-align-fold`` option has been enabled, three additional fields will be reported:<br/>
 
 Field  | Description
 -----: | :----------
