@@ -86,7 +86,7 @@ The file "*results.out*" stores the results of the database search:
 
 
 ```text
-Query	    DB entry	Qstart  Qend   Dstart  Dend   Qseed    Dseed      Score    P-value    E-value
+Query     DB entry  Qstart  Qend   Dstart  Dend   Qseed    Dseed      Score    P-value    E-value
 16S_600   16S       0       199    608     807    60-114   668-722    190.53   4.47e-11   6.39e-09  !
 16S_500   16S       0       196    508     704    160-186  668-694    203.47   2.30e-10   3.06e-08  !
 16S_200   16S       9       199    216     406    120-183  327-390    187.13   3.13e-10   3.41e-08  !
