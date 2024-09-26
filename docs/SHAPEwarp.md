@@ -31,7 +31,7 @@ __-db__ *or* __--database__ | string | Path to a database file, or to a (directo
 __--shuffled-db__ | string | Path to a shuffled database file<br/>__Note:__ if not provided, shuffling will be performed on the fly
 __--dump-db__ | string | Dumps the imported XML files to the specified database file
 __--dump-shuffled-db__ | string | Dumps the shuffled database to the specified file
-__--db-shufflings__ | int | Number of shuffles to perform for each sequence in the database (Default: __100__)<br/>__Note:__ see [Building the database](https://shapewarp-docs.readthedocs.io/en/latest/SHAPEwarp/#building-the-database) section below)
+__--db-shuffles__ | int | Number of shuffles to perform for each sequence in the database (Default: __100__)<br/>__Note:__ see [Building the database](https://shapewarp-docs.readthedocs.io/en/latest/SHAPEwarp/#building-the-database) section below)
 __--db-block-size__ | int | Size (in nt) of the blocks for shuffling the sequences in the database (Default: __10__)
 __--db-in-block-shuffle__ | | Besides shuffling blocks, residues within each block will be shuffled as well
 __-q__ *or* __--query__ | string | Path to the query file<br/>__Note:__ each entry should contain (one per row) the sequence id, the nucleotide sequence and a comma-separated list of SHAPE reactivities (see [SHAPEwarp query files](https://shapewarp-docs.readthedocs.io/en/latest/SHAPEwarp/#shapewarp-query-files) section below)
@@ -69,7 +69,7 @@ __--align-seq-match-score__ | float | Score reward for matching bases (Default: 
 __--align-seq-mismatch-score__ | float | Score reward for matching bases (Default: __-2__)
  | | __Alignment folding evaluation options__ 
 __--eval-align-fold__ | | Alignments passing the ``--inclusion-evalue`` threshold, are further evaluated for the presence of a conserved RNA structure by using ``RNAalifold``
-__--shufflings__ | | Number of shufflings to perform for each alignment (Default: __100__)
+__--shuffles__ | | Number of shuffles to perform for each alignment (Default: __100__)
 __--block-size__ | int | Size (in nt) of the blocks for shuffling the alignment (Default: __3__)
 __--in-block-shuffle__ | | Besides shuffling blocks, residues within each block will be shuffled as well
 __--min-bp-support__ | float | Minimum fraction of base-pairs of the RNAalifold-inferred structure that should be supported by both query and db sequence to retain a match (Default: __0.75__)
@@ -97,7 +97,7 @@ Similarly, to reduce runtimes, or to ensure reproducible search results, it migh
 $ SHAPEwarp --database /path/to/directory/of/XML/files --dump-db /path/to/binary/database.db --dump-shuffled-db /path/to/shuffled/database.db
 ```
 <br/>
-By default, 100&times; shuffles of the original database will be performed. In most cases such a high number of shuffles is not needed and it will only exponentially increase the search time. As a rule of thumb, the number of shuffles needed can be determined using the following empirical formula:<br/><br/>
+By default, 100&times; shuffles (``--db-shuffles``) of the original database will be performed. In most cases such a high number of shuffles is not needed and it will only exponentially increase the search time. As a rule of thumb, the number of shuffles needed can be determined using the following empirical formula:<br/><br/>
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mi>m</mi><mi>a</mi><mi>x</mi><mo>(</mo><mn>1</mn><mo>,</mo><mo>&#xA0;</mo><mi>i</mi><mi>n</mi><mi>t</mi><mo>(</mo><mn>500000</mn><mo>/</mo><mi>L</mi><mo>)</mo><mo>)</mo></math>
 <br/>
 where *L* is the sum of the lengths of all the sequences in the database.
@@ -127,7 +127,7 @@ Optionally, if the ``eval-align-fold`` option is enabled, alignments passing the
 <br/>
 &#916;G<sub>SHAPE</sub>(*i*) = ``slope`` &middot; ln[Reactivity(*i*) + 1] + ``intercept``
 <br/><br/>
-If less than ``min-bp-support`` base-pairs from the predicted consensus structure are supported for either of the two aligned RNAs, the match is discarded. Furthermore, the probability of predicting a structure with a free energy &le; to that of the consensus structure inferred from the alignment is evaluated by randomly shuffling ``shufflings`` times the columns of the original alignment in ``block-size``-long blocks, followed by __RNAalifold__ analysis. A z-score is calculated and the corresponding *p-value* determined. If the *p-value* is &lt; 0.05, the alignment and the inferred structure are reported.<br/><br/>
+If less than ``min-bp-support`` base-pairs from the predicted consensus structure are supported for either of the two aligned RNAs, the match is discarded. Furthermore, the probability of predicting a structure with a free energy &le; to that of the consensus structure inferred from the alignment is evaluated by randomly shuffling ``shuffles`` times the columns of the original alignment in ``block-size``-long blocks, followed by __RNAalifold__ analysis. A z-score is calculated and the corresponding *p-value* determined. If the *p-value* is &lt; 0.05, the alignment and the inferred structure are reported.<br/><br/>
 ## SHAPEwarp query files
 SHAPEwarp query files are plain-text files, containing the unique identifier, nucleotide sequence and reactivity profile, one per line, for each query to be searched against the database. The typical SHAPEwarp query file has the following structure:
 
